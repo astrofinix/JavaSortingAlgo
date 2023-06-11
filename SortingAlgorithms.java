@@ -6,7 +6,7 @@ import java.time.Duration;
 
 public class SortingAlgorithms {
     private static final String FILE_PATH = "dataset.txt";
-    private static final int ARRAY_SIZE = 10000;
+    private static final int ARRAY_SIZE = 1_500_000;
     private static final int NUM_TRIALS = 5;
 
     public static void main(String[] args) {
