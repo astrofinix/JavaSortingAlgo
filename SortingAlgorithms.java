@@ -2,28 +2,17 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.time.Duration;
 
 public class SortingAlgorithms {
     private static final String FILE_PATH = "dataset.txt";
-    private static final int ARRAY_SIZE = 1_500_000;
-    private static final int NUM_TRIALS = 20;
+    private static final int ARRAY_SIZE = 10000;
+    private static final int NUM_TRIALS = 5;
 
     public static void main(String[] args) {
         int[] array = readArrayFromFile(FILE_PATH);
 
         long[][] runtimes = new long[NUM_TRIALS][6];
-
-        System.out.println("Bubble Sort:");
-        for (int i = 0; i < NUM_TRIALS; i++) {
-            int[] copyArray = Arrays.copyOf(array, array.length);
-            long startTime = System.nanoTime();
-            bubbleSort(copyArray);
-            long endTime = System.nanoTime();
-            long runtime = endTime - startTime;
-            runtimes[i][0] = runtime;
-            printFormattedTime(runtime);
-        }
-        printRuntimeTable(runtimes, 0);
 
         System.out.println("\nInsertion Sort:");
         for (int i = 0; i < NUM_TRIALS; i++) {
@@ -32,10 +21,10 @@ public class SortingAlgorithms {
             insertionSort(copyArray);
             long endTime = System.nanoTime();
             long runtime = endTime - startTime;
-            runtimes[i][1] = runtime;
+            runtimes[i][0] = runtime;
             printFormattedTime(runtime);
         }
-        printRuntimeTable(runtimes, 1);
+        printRuntimeTable(runtimes, 0);
 
         System.out.println("\nSelection Sort:");
         for (int i = 0; i < NUM_TRIALS; i++) {
@@ -44,10 +33,10 @@ public class SortingAlgorithms {
             selectionSort(copyArray);
             long endTime = System.nanoTime();
             long runtime = endTime - startTime;
-            runtimes[i][2] = runtime;
+            runtimes[i][1] = runtime;
             printFormattedTime(runtime);
         }
-        printRuntimeTable(runtimes, 2);
+        printRuntimeTable(runtimes, 1);
 
         System.out.println("\nQuick Sort:");
         for (int i = 0; i < NUM_TRIALS; i++) {
@@ -56,16 +45,28 @@ public class SortingAlgorithms {
             quickSort(copyArray, 0, copyArray.length - 1);
             long endTime = System.nanoTime();
             long runtime = endTime - startTime;
-            runtimes[i][3] = runtime;
+            runtimes[i][2] = runtime;
             printFormattedTime(runtime);
         }
-        printRuntimeTable(runtimes, 3);
+        printRuntimeTable(runtimes, 2);
 
         System.out.println("\nBuilt-in Java sorting method (Arrays.sort):");
         for (int i = 0; i < NUM_TRIALS; i++) {
             int[] copyArray = Arrays.copyOf(array, array.length);
             long startTime = System.nanoTime();
             Arrays.sort(copyArray);
+            long endTime = System.nanoTime();
+            long runtime = endTime - startTime;
+            runtimes[i][3] = runtime;
+            printFormattedTime(runtime);
+        }
+        printRuntimeTable(runtimes, 3);
+
+        System.out.println("Bubble Sort:");
+        for (int i = 0; i < NUM_TRIALS; i++) {
+            int[] copyArray = Arrays.copyOf(array, array.length);
+            long startTime = System.nanoTime();
+            bubbleSort(copyArray);
             long endTime = System.nanoTime();
             long runtime = endTime - startTime;
             runtimes[i][4] = runtime;
@@ -91,19 +92,17 @@ public class SortingAlgorithms {
     // Sorting algorithm implementations...
 
     private static void printFormattedTime(long runtime) {
-        long ns = runtime % 1000;
-        runtime /= 1000;
-        long ms = runtime % 1000;
-        runtime /= 1000;
-        long sec = runtime % 60;
-        runtime /= 60;
-        long min = runtime % 60;
-        runtime /= 60;
-        long hr = runtime;
+        Duration duration = Duration.ofNanos(runtime);
 
-        System.out.printf("%02d:%02d:%02d:%03d:%03d%n", hr, min, sec, ms, ns);
+        long hours = duration.toHours();
+        long minutes = duration.toMinutesPart();
+        long seconds = duration.toSecondsPart();
+        long milliseconds = duration.toMillisPart();
+        long nanoseconds = duration.toNanosPart();
+    
+        System.out.printf("%02d:%02d:%02d:%03d:%03d%n", hours, minutes, seconds, milliseconds, nanoseconds);
     }
-
+    
     private static void printRuntimeTable(long[][] runtimes, int algorithmIndex) {
         System.out.println("Runtime Table:");
         System.out.println("----------------------------");
