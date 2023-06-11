@@ -7,12 +7,36 @@ import java.time.Duration;
 public class SortingAlgorithms {
     private static final String FILE_PATH = "dataset.txt";
     private static final int ARRAY_SIZE = 1_500_000;
-    private static final int NUM_TRIALS = 5;
+    private static final int NUM_TRIALS = 20;
 
     public static void main(String[] args) {
         int[] array = readArrayFromFile(FILE_PATH);
 
         long[][] runtimes = new long[NUM_TRIALS][6];
+
+        System.out.println("\nBuilt-in Java sorting method (Arrays.sort):");
+        for (int i = 0; i < NUM_TRIALS; i++) {
+            int[] copyArray = Arrays.copyOf(array, array.length);
+            long startTime = System.nanoTime();
+            Arrays.sort(copyArray);
+            long endTime = System.nanoTime();
+            long runtime = endTime - startTime;
+            runtimes[i][3] = runtime;
+            printFormattedTime(runtime);
+        }
+        printRuntimeTable(runtimes, 3);
+
+         System.out.println("\nQuick Sort:");
+        for (int i = 0; i < NUM_TRIALS; i++) {
+            int[] copyArray = Arrays.copyOf(array, array.length);
+            long startTime = System.nanoTime();
+            quickSort(copyArray, 0, copyArray.length - 1);
+            long endTime = System.nanoTime();
+            long runtime = endTime - startTime;
+            runtimes[i][2] = runtime;
+            printFormattedTime(runtime);
+        }
+        printRuntimeTable(runtimes, 2);
 
         System.out.println("\nInsertion Sort:");
         for (int i = 0; i < NUM_TRIALS; i++) {
@@ -38,29 +62,7 @@ public class SortingAlgorithms {
         }
         printRuntimeTable(runtimes, 1);
 
-        System.out.println("\nQuick Sort:");
-        for (int i = 0; i < NUM_TRIALS; i++) {
-            int[] copyArray = Arrays.copyOf(array, array.length);
-            long startTime = System.nanoTime();
-            quickSort(copyArray, 0, copyArray.length - 1);
-            long endTime = System.nanoTime();
-            long runtime = endTime - startTime;
-            runtimes[i][2] = runtime;
-            printFormattedTime(runtime);
-        }
-        printRuntimeTable(runtimes, 2);
 
-        System.out.println("\nBuilt-in Java sorting method (Arrays.sort):");
-        for (int i = 0; i < NUM_TRIALS; i++) {
-            int[] copyArray = Arrays.copyOf(array, array.length);
-            long startTime = System.nanoTime();
-            Arrays.sort(copyArray);
-            long endTime = System.nanoTime();
-            long runtime = endTime - startTime;
-            runtimes[i][3] = runtime;
-            printFormattedTime(runtime);
-        }
-        printRuntimeTable(runtimes, 3);
 
         System.out.println("Bubble Sort:");
         for (int i = 0; i < NUM_TRIALS; i++) {
